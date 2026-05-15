@@ -137,6 +137,8 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
   String? _pendingInitialWeaknessSectionKey;
   String? _appliedInitialWeaknessSectionKey;
   AiAnalysisStateData? _aiReviewOverride;
+  final Map<String, ScrollController> _reviewTableScrollControllers =
+      <String, ScrollController>{};
   bool _autoRefresh = false;
   bool _isRefreshing = false;
   bool _isGeneratingAiReview = false;
@@ -168,6 +170,9 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
   @override
   void dispose() {
     _autoRefreshTimer?.cancel();
+    for (final controller in _reviewTableScrollControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -500,11 +505,14 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          AiAnalysisPanel(
-            title: 'AI涨停复盘',
-            actionLabel: '后端会结合牛牛竞价和连板天梯数据请求 Kimi，生成盘中或盘后复盘。',
-            state: aiReview,
+          const SizedBox(height: 10),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: AiAnalysisPanel(
+              title: 'AI涨停复盘',
+              actionLabel: '后端会结合牛牛竞价和连板天梯数据请求 Kimi，生成盘中或盘后复盘。',
+              state: aiReview,
+            ),
           ),
           if (snapshot.navigation.availableTradeDates.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -1607,10 +1615,10 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: theme.colorScheme.outlineVariant),
       ),
       child: Column(
@@ -1648,7 +1656,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
           if (snapshot.groups.isNotEmpty) ...[
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -1679,7 +1687,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
                     .toList(growable: false),
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
           ],
           if (snapshot.groups.isEmpty)
             _buildSectionEmpty(
@@ -1689,7 +1697,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
           else
             ...snapshot.groups.map(
               (group) => Padding(
-                padding: const EdgeInsets.only(bottom: 14),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: _buildReviewGroup(context, group),
               ),
             ),
@@ -1710,7 +1718,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
         final isWide = constraints.maxWidth >= 900;
 
         return Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: AppTheme.surfaceSoft,
             borderRadius: BorderRadius.circular(8),
@@ -1720,7 +1728,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildGroupLabel(context, group),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: items.isEmpty
                           ? Text('暂无数据', style: theme.textTheme.bodyLarge)
@@ -1732,7 +1740,7 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildGroupLabel(context, group),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 10),
                     if (items.isEmpty)
                       Text('暂无数据', style: theme.textTheme.bodyLarge)
                     else
@@ -1748,8 +1756,8 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
     final theme = Theme.of(context);
 
     return Container(
-      width: 136,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      width: 112,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: theme.colorScheme.primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(6),
@@ -1795,6 +1803,10 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
     final items = group.displayItems;
     final displayColumns = group.displayColumns;
     final columns = _resolveReviewColumns(displayColumns);
+    final scrollController = _reviewTableScrollControllers.putIfAbsent(
+      group.name,
+      ScrollController.new,
+    );
     final tableWidth = columns.fold<double>(
       4,
       (sum, column) => sum + column.width,
@@ -1808,25 +1820,34 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
           border: Border.all(color: theme.colorScheme.outlineVariant),
           borderRadius: BorderRadius.circular(6),
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SizedBox(
-            width: tableWidth,
-            child: Column(
-              children: [
-                _buildReviewHeaderRow(context, columns),
-                ...List<Widget>.generate(
-                  items.length,
-                  (index) => _buildReviewDataRow(
-                    context,
-                    items[index],
-                    columns,
-                    displayColumns,
-                    index,
+        child: Scrollbar(
+          key: ValueKey<String>('limit-review-table-scrollbar-${group.name}'),
+          controller: scrollController,
+          thumbVisibility: true,
+          trackVisibility: true,
+          notificationPredicate: (notification) =>
+              notification.metrics.axis == Axis.horizontal,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: tableWidth,
+              child: Column(
+                children: [
+                  _buildReviewHeaderRow(context, columns),
+                  ...List<Widget>.generate(
+                    items.length,
+                    (index) => _buildReviewDataRow(
+                      context,
+                      items[index],
+                      columns,
+                      displayColumns,
+                      index,
+                    ),
+                    growable: false,
                   ),
-                  growable: false,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -1966,8 +1987,8 @@ class _LimitReviewPageState extends ConsumerState<LimitReviewPage> {
     return Container(
       width: column.width,
       padding: EdgeInsets.symmetric(
-        horizontal: isHeader ? 10 : 12,
-        vertical: isHeader ? 12 : 14,
+        horizontal: isHeader ? 9 : 10,
+        vertical: isHeader ? 8 : 9,
       ),
       alignment: alignment,
       child: child,

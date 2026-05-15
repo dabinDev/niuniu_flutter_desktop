@@ -845,14 +845,14 @@ class _PlateRotationPageState extends ConsumerState<PlateRotationPage> {
                   ),
                   const Spacer(),
                   Text(
-                    '涨停 ${cell.ztCount}',
+                    '当日涨停 ${cell.ztCount}',
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: isSelectedCell ? Colors.white : tone.text,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    cell.strengthText ?? '--',
+                    _formatLatestZtLabel(cell.latestZt),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
@@ -1679,7 +1679,7 @@ try {
     PlateRotationSnapshot snapshot,
     List<String> dates,
   ) {
-    final apiMatrix = _buildMatrixFromColumns(snapshot.matrixColumns, dates);
+    final apiMatrix = _buildMatrixFromColumns(snapshot, dates);
     if (!_matrixIsEmpty(apiMatrix)) {
       return apiMatrix;
     }
@@ -1704,6 +1704,7 @@ try {
             plateName: item.plateName,
             plateCode: item.plateCode,
             ztCount: point.ztCount!,
+            latestZt: item.latestZt,
             strength: point.strength,
             strengthText: point.strengthText,
             date: date,
@@ -1734,9 +1735,10 @@ try {
   }
 
   List<List<_MatrixCellData?>> _buildMatrixFromColumns(
-    List<PlateRotationMatrixColumnData> columns,
+    PlateRotationSnapshot snapshot,
     List<String> dates,
   ) {
+    final columns = snapshot.matrixColumns;
     if (columns.isEmpty) {
       return const <List<_MatrixCellData?>>[];
     }
@@ -1760,6 +1762,11 @@ try {
           plateName: item.plateName,
           plateCode: item.plateCode,
           ztCount: ztCount,
+          latestZt: _latestZtForPlate(
+            snapshot,
+            plateCode: item.plateCode,
+            plateName: item.plateName,
+          ),
           strength: item.strength,
           strengthText: item.strengthText,
           date: date,
@@ -1909,6 +1916,26 @@ try {
     return null;
   }
 
+  int? _latestZtForPlate(
+    PlateRotationSnapshot snapshot, {
+    required String? plateCode,
+    required String plateName,
+  }) {
+    for (final item in snapshot.items) {
+      if (_plateCodeMatches(plateCode, item.plateCode) ||
+          item.plateName == plateName) {
+        return item.latestZt;
+      }
+    }
+    for (final summary in snapshot.plateDateSummaries) {
+      if (_plateCodeMatches(plateCode, summary.plateCode) ||
+          summary.plateName == plateName) {
+        return summary.latestZt;
+      }
+    }
+    return null;
+  }
+
   bool _plateCodeMatches(String? left, String? right) {
     final leftKey = _normalizePlateCodeKey(left);
     final rightKey = _normalizePlateCodeKey(right);
@@ -1946,6 +1973,10 @@ try {
       parts.add('龙头 ${summary.leaderTotal}');
     }
     return parts.join('  |  ');
+  }
+
+  String _formatLatestZtLabel(int? latestZt) {
+    return latestZt == null ? '最新涨停 --' : '最新涨停 $latestZt';
   }
 
   String _formatLeaderSummaryIntro(
@@ -3283,6 +3314,7 @@ class _MatrixCellData {
     required this.plateName,
     required this.plateCode,
     required this.ztCount,
+    required this.latestZt,
     required this.strength,
     required this.strengthText,
     required this.date,
@@ -3292,6 +3324,7 @@ class _MatrixCellData {
   final String plateName;
   final String? plateCode;
   final int ztCount;
+  final int? latestZt;
   final double? strength;
   final String? strengthText;
   final String date;
@@ -3302,6 +3335,7 @@ class _MatrixCellData {
       plateName: plateName,
       plateCode: plateCode,
       ztCount: ztCount,
+      latestZt: latestZt,
       strength: strength,
       strengthText: strengthText,
       date: date,

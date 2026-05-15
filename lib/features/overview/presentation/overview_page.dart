@@ -410,8 +410,9 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
               ),
               _buildBuildInfoChip(
                 context,
-                icon:
-                    build.externallyServed ? Icons.public_rounded : Icons.link_rounded,
+                icon: build.externallyServed
+                    ? Icons.public_rounded
+                    : Icons.link_rounded,
                 label: build.externallyServed ? '静态服务' : '接口状态',
                 value: build.externallyServed
                     ? '外部前端在线'
@@ -981,7 +982,7 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
                   value: latestLeader?.latestZt == null
                       ? '--'
                       : '${latestLeader!.latestZt}',
-                  caption: latestLeader?.latestStrengthText ?? '--',
+                  caption: latestLeader?.latestZt == null ? '--' : 'latest_zt',
                 ),
               ],
             ),
@@ -1045,7 +1046,7 @@ class _OverviewPageState extends ConsumerState<OverviewPage> {
           _buildCompareLine(
             context,
             latestPoint?.date ?? '--',
-            item.latestStrengthText ?? '--',
+            item.latestZt == null ? '--' : 'latest_zt ${item.latestZt}',
             accent,
           ),
         ],

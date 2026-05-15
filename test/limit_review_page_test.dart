@@ -803,6 +803,77 @@ void main() {
     expect(find.text('600000'), findsWidgets);
     expect(find.text('浦发银行'), findsWidgets);
   });
+
+  testWidgets('limit review tables keep change percent visible with scrollbar',
+      (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(1366, 1800);
+    addTearDown(tester.view.reset);
+
+    const shellOverview = OverviewSnapshot(
+      tradeDate: '2026-04-18',
+      notices: [],
+      indices: [],
+      amountSummary: OverviewAmountSummaryData(),
+      breadthSummary: OverviewBreadthSummaryData(),
+      sentiment: OverviewSentimentSummaryData(
+        stage: 'neutral',
+        bias: 'neutral',
+        score: 50,
+        metrics: [],
+      ),
+      shellStatus: OverviewShellStatusData(
+        marketPhase: 'off_hours',
+        dataFreshness: 'fresh',
+        jobHealth: OverviewJobHealthData(
+          totalJobs: 0,
+          enabledJobs: 0,
+          healthyJobs: 0,
+          warningJobs: 0,
+          failedJobs: 0,
+          queuedJobs: 0,
+        ),
+        watchedJobs: [],
+      ),
+    );
+
+    final repository = _FakeReviewRepository(
+      latestSnapshot: _latestReviewSnapshot(),
+      olderSnapshot: _olderReviewSnapshot(),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          shellOverviewProvider.overrideWith((ref) async => shellOverview),
+          reviewRepositoryProvider.overrideWithValue(repository),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(),
+          home: const LimitReviewPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final tableFinder =
+        find.byKey(const ValueKey('limit-review-table-scrollbar-3 Board'));
+    expect(tableFinder, findsOneWidget);
+    expect(find.text('现涨幅'), findsWidgets);
+    expect(find.text('+9.99%'), findsWidgets);
+
+    final rowFinder = find.ancestor(
+      of: find.text('+9.99%').first,
+      matching: find.byType(InkWell),
+    );
+    expect(rowFinder, findsWidgets);
+    expect(
+      tester.getBottomLeft(find.text('+9.99%').first).dy,
+      lessThanOrEqualTo(tester.getBottomLeft(tableFinder).dy),
+    );
+  });
 }
 
 class _FakeReviewRepository extends ReviewRepository {

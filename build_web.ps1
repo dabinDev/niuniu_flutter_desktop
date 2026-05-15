@@ -88,13 +88,13 @@ try {
   $bootstrapPath = Join-Path $buildDir 'flutter_bootstrap.js'
 
   if (Test-Path -LiteralPath $indexPath) {
-    $indexContent = Get-Content -LiteralPath $indexPath -Raw
+    $indexContent = Get-Content -LiteralPath $indexPath -Raw -Encoding UTF8
     $indexContent = $indexContent -replace 'flutter_bootstrap\.js(?:\?v=[0-9A-Za-z_.-]+)?', "flutter_bootstrap.js?v=$cacheBustVersion"
     Set-Content -LiteralPath $indexPath -Value $indexContent -Encoding UTF8 -NoNewline
   }
 
   if (Test-Path -LiteralPath $bootstrapPath) {
-    $bootstrapContent = Get-Content -LiteralPath $bootstrapPath -Raw
+    $bootstrapContent = Get-Content -LiteralPath $bootstrapPath -Raw -Encoding UTF8
     $bootstrapContent = $bootstrapContent -replace '"mainJsPath":"main\.dart\.js(?:\?v=[0-9A-Za-z_.-]+)?"', "`"mainJsPath`":`"main.dart.js?v=$cacheBustVersion`""
     Set-Content -LiteralPath $bootstrapPath -Value $bootstrapContent -Encoding UTF8 -NoNewline
   }

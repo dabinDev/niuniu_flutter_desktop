@@ -16,6 +16,9 @@ import '../application/stock_link_service.dart';
 
 final jobsTabUnlockedProvider = StateProvider<bool>((ref) => false);
 
+const _brandLogoAsset = 'assets/brand/niuniu_logo.png';
+const _brandIconAsset = 'assets/brand/niuniu_icon.png';
+
 const niuniuClientDownloadUrl = String.fromEnvironment(
   'CLIENT_DOWNLOAD_URL',
   defaultValue: '',
@@ -459,14 +462,7 @@ class _CompactShellHeader extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              Container(
-                width: 9,
-                height: 9,
-                decoration: const BoxDecoration(
-                  color: AppTheme.secondary,
-                  shape: BoxShape.circle,
-                ),
-              ),
+              const _BrandMark(size: 24),
               const SizedBox(width: 8),
               Text('牛牛开盘', style: theme.textTheme.titleMedium),
               const SizedBox(width: 16),
@@ -704,6 +700,63 @@ class _NoticeBanner extends StatelessWidget {
   }
 }
 
+class _BrandMark extends StatelessWidget {
+  const _BrandMark({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: Image.asset(
+        _brandIconAsset,
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+        semanticLabel: '牛牛开盘图标',
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: AppTheme.secondary,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BrandLogo extends StatelessWidget {
+  const _BrandLogo({
+    required this.width,
+    required this.height,
+  });
+
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: Image.asset(
+        _brandLogoAsset,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, 0.74),
+        semanticLabel: '牛牛开盘网站 logo',
+        errorBuilder: (context, error, stackTrace) => Text(
+          '牛牛开盘',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ),
+    );
+  }
+}
+
 class _BrandBlock extends StatelessWidget {
   const _BrandBlock({
     required this.snapshot,
@@ -727,32 +780,27 @@ class _BrandBlock extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 10,
-            height: 10,
-            decoration: const BoxDecoration(
-              color: AppTheme.secondary,
-              shape: BoxShape.circle,
-            ),
-          ),
+          const _BrandMark(size: 30),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('牛牛开盘', style: theme.textTheme.titleMedium),
-              const SizedBox(height: 2),
-              Text(
-                snapshot == null
-                    ? '牛牛开盘 · ${_shortApiBaseUrl(apiBaseUrl)}'
-                    : '牛牛开盘 · ${snapshot!.tradeDate} · ${_shortApiBaseUrl(apiBaseUrl)}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.mutedText,
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _BrandLogo(width: 116, height: 34),
+                const SizedBox(height: 4),
+                Text(
+                  snapshot == null
+                      ? '牛牛开盘 · ${_shortApiBaseUrl(apiBaseUrl)}'
+                      : '牛牛开盘 · ${snapshot!.tradeDate} · ${_shortApiBaseUrl(apiBaseUrl)}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.mutedText,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -2364,24 +2412,10 @@ class _ShellSidebar extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFB7853E),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          '牛牛开盘',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
+                      const _BrandMark(size: 34),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: _BrandLogo(width: 154, height: 40),
                       ),
                     ],
                   ),

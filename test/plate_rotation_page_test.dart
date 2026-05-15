@@ -327,6 +327,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('板块轮动'), findsWidgets);
+    expect(find.text('最新涨停 5'), findsWidgets);
+    expect(find.text('最新涨停 4'), findsWidgets);
+    expect(find.text('Strong'), findsNothing);
+    expect(find.text('Rising'), findsNothing);
     expect(
       find.bySemanticsLabel('pw-plate-rotation-toolbar-复制图片'),
       findsOneWidget,

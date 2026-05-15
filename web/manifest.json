@@ -1,11 +1,11 @@
 {
-    "name": "niuniu_kaipan",
-    "short_name": "niuniu_kaipan",
+    "name": "牛牛开盘",
+    "short_name": "牛牛开盘",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0b1220",
+    "theme_color": "#1f4b3f",
+    "description": "牛牛开盘 - 竞价、复盘、板块轮动和行情工作台。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
