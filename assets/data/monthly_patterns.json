@@ -1,0 +1,122 @@
+[
+  {
+    "month": "January",
+    "headline": "Reset and reopen",
+    "trend": "Balanced",
+    "win_rate": "55-58%",
+    "drivers": ["holiday liquidity reset", "small-cap reopening", "theme rotation"],
+    "focus": "small caps and new annual themes",
+    "analysis": "Capital rotates back after year-end positioning, but liquidity is still selective before the long holiday.",
+    "strategy": "Build starter positions and keep room for volatility around the holiday break."
+  },
+  {
+    "month": "February",
+    "headline": "Spring rally window",
+    "trend": "Strong",
+    "win_rate": "68-75%",
+    "drivers": ["post-holiday cash return", "growth rotation", "policy expectation gap"],
+    "focus": "growth and tech leadership",
+    "analysis": "This is usually the cleanest risk-on window of Q1. Fast money and institutions both lean into new annual narratives.",
+    "strategy": "Trade offensively, but stay with liquid leaders instead of chasing thin tails."
+  },
+  {
+    "month": "March",
+    "headline": "Policy-theme expansion",
+    "trend": "Strong",
+    "win_rate": "around 60%",
+    "drivers": ["policy meetings", "macro narrative reset", "sector theme trading"],
+    "focus": "policy beneficiaries and reform themes",
+    "analysis": "Headline policy language becomes the main catalyst, so narrative strength matters as much as pure earnings.",
+    "strategy": "Trade the confirmed policy lanes and avoid overextended secondary copies."
+  },
+  {
+    "month": "April",
+    "headline": "Earnings stress test",
+    "trend": "Weak",
+    "win_rate": "about 42%",
+    "drivers": ["annual reports", "Q1 reports", "expectation reset"],
+    "focus": "defensive quality and cash-flow names",
+    "analysis": "The market stops rewarding stories without numbers. Report season usually punishes weak balance sheets and crowded momentum trades.",
+    "strategy": "Cut weak themes quickly and rotate toward businesses with cleaner visibility."
+  },
+  {
+    "month": "May",
+    "headline": "Lower-conviction tape",
+    "trend": "Soft",
+    "win_rate": "below 50%",
+    "drivers": ["policy vacuum", "global risk-off seasonality", "lighter turnover"],
+    "focus": "high-dividend defensives",
+    "analysis": "Seasonality usually turns more selective. Rotation gets slower and broad participation weakens.",
+    "strategy": "Run lighter exposure and favor names that can hold without constant flow support."
+  },
+  {
+    "month": "June",
+    "headline": "Mid-year liquidity squeeze",
+    "trend": "Soft",
+    "win_rate": "45-46%",
+    "drivers": ["mid-year funding pressure", "institutional rebalancing", "volume contraction"],
+    "focus": "large caps and cyclicals with valuation support",
+    "analysis": "Risk appetite often fades into the half-year turn, especially when institutions prioritize balance-sheet optics.",
+    "strategy": "Trade smaller and wait for cleaner setups instead of forcing trend continuation."
+  },
+  {
+    "month": "July",
+    "headline": "Interim results preview",
+    "trend": "Mixed",
+    "win_rate": "around 50%",
+    "drivers": ["mid-year guidance", "politburo meeting", "style rotation"],
+    "focus": "earnings-upgrade candidates",
+    "analysis": "The market starts splitting between names with visible interim growth and themes still running on narrative only.",
+    "strategy": "Anchor on earnings revisions and be ready for fast style rotation."
+  },
+  {
+    "month": "August",
+    "headline": "Results digestion",
+    "trend": "Soft",
+    "win_rate": "around 45%",
+    "drivers": ["report concentration", "vacation liquidity", "expectation washout"],
+    "focus": "defensive leaders and cash generators",
+    "analysis": "Report season keeps the tape fragmented. Good numbers help, but misses are punished quickly.",
+    "strategy": "Protect capital first and only add where results improve forward expectations."
+  },
+  {
+    "month": "September",
+    "headline": "Choppy transition month",
+    "trend": "Soft",
+    "win_rate": "around 50%",
+    "drivers": ["quarter-end positioning", "narrative gaps", "fast rotation"],
+    "focus": "tactical themes, not broad beta",
+    "analysis": "There is often no dominant market-wide trend. Traders get paid more by timing than by sitting in passive exposure.",
+    "strategy": "Trade tactically, keep stops tight, and avoid assuming every bounce becomes a trend."
+  },
+  {
+    "month": "October",
+    "headline": "Repricing after reports",
+    "trend": "Balanced-to-strong",
+    "win_rate": "55-63%",
+    "drivers": ["post-holiday reset", "Q3 disclosure", "valuation rebuild"],
+    "focus": "quality leaders with cleaner Q3 visibility",
+    "analysis": "Once the holiday passes, the market often starts rebuilding conviction around names that survived report season cleanly.",
+    "strategy": "Accumulate quality where guidance and price action start lining up again."
+  },
+  {
+    "month": "November",
+    "headline": "Institutional rotation month",
+    "trend": "Strong",
+    "win_rate": "about 65%",
+    "drivers": ["next-year positioning", "global flow return", "style rotation"],
+    "focus": "undervalued cyclicals and new leadership candidates",
+    "analysis": "Funds start leaning into the next annual playbook. This can produce powerful rotation away from crowded winners.",
+    "strategy": "Follow fresh sponsorship and do not cling to tired leaders from the prior run."
+  },
+  {
+    "month": "December",
+    "headline": "Ranking defense and reset",
+    "trend": "Mixed",
+    "win_rate": "50-55%",
+    "drivers": ["year-end ranking", "window dressing", "next-year scouting"],
+    "focus": "defensives early, fresh growth late",
+    "analysis": "Early December often stays defensive while funds protect rankings. Late in the month, the market starts probing next-year candidates.",
+    "strategy": "Stay patient early, then build watchlists aggressively for the first quarter reopen."
+  }
+]
